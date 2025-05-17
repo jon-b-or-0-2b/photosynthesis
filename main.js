@@ -45,8 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     plantTitle.textContent = plantName;
     waterInfo.textContent  = `Water every ${data.wateringDays} days.`;
-    mistInfo.textContent   = data.mistingDays ? `Mist every ${data.mistingDays} days.` : '';
-    repotInfo.textContent  = `Repot every ${data.repotMonths} months.`;
+    if (!data.mistingDays) {mistInfo.textContent = '';} else if (data.mistingDays === ": No Misting") {mistInfo.textContent = 'No misting needed.';} 
+    else {mistInfo.textContent = `Mist every ${data.mistingDays} days.`;}
+    if (data.repotMonths === ": No Repot") { repotInfo.textContent = 'No repotting needed.';} 
+    else {repotInfo.textContent = `Repot every ${data.repotMonths === null ? "0" : data.repotMonths} months.`;}
     tempInfo.textContent   = `Ideal temperature: ${data.temperature}`;
     soilInfo.textContent   = `Soil type: ${data.soilType}`;
     toxInfo.textContent    = `Toxicity: ${data.toxicity}`;

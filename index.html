@@ -2,9 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="description" content="Instant plant care schedule for your favorite houseplants">
+  <meta name="description" content="Instant plant care schedule for your favorite houseplants. Easily generate watering, misting, repotting, and toxicity info—pet safe or toxic—then download as a PDF!">
+  <meta name="keywords" content="houseplant watering schedule, plant care guide, misting schedule, repotting chart, toxic plants, pet safe plants, houseplant toxicity, plant care PDF">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Instant Plant Watering & Care Scheduler">
+  <meta property="og:description" content="Select your houseplant to instantly generate a personalized watering, misting, repotting, and toxicity schedule. Download as a PDF!">
+  <meta property="og:image" content="https://yourdomain.com/assets/plant-scheduler-preview.png">
+  <meta property="og:url" content="https://yourdomain.com/">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Instant Plant Watering & Care Scheduler">
+  <meta name="twitter:description" content="Instantly generate a customized care plan for your houseplants—complete with toxicity info. Download as PDF!">
+  <meta name="twitter:image" content="https://yourdomain.com/assets/plant-scheduler-preview.png">
+
   <title>Plant Watering Scheduler</title>
+
+  <!-- JSON-LD for structured data (not visible) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "url": "https://yourdomain.com/",
+    "name": "Plant Watering Scheduler",
+    "description": "Generate customized watering, misting, repotting, and toxicity schedules for popular houseplants. Download your plan as a PDF.",
+    "potentialAction": {
+      "@type": "ReadAction",
+      "target": "https://yourdomain.com/?plant={plant}"
+    }
+  }
+  </script>
+
+  <!-- Re-added jsPDF script from first file -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
   <style>
     :root {
       --bg: #FAFCFB;
@@ -13,6 +46,7 @@
       --accent: #81C784;
       --text: #263238;
       --muted: #546E7A;
+      --info-text: #1B5E20; /* Dark green for info text */
     }
     * { box-sizing: border-box; }
     body {
@@ -20,7 +54,8 @@
       font-family: "Segoe UI", sans-serif;
       background: var(--bg);
       color: var(--text);
-      display: flex; justify-content: center;
+      display: flex;
+      justify-content: center;
     }
     .container {
       width: 100%; max-width: 400px;
@@ -29,38 +64,23 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       padding: 2rem;
     }
-    h1 { margin-top: 0; font-size: 1.75rem; color: var(--primary); }
-    select {
-      width: 100%; padding: 0.75rem;
-      border: 1px solid var(--muted); border-radius: 8px;
-      font-size: 1rem;
-    }
-    .schedule {
-      margin-top: 1.5rem; padding: 1.25rem;
-      background: var(--accent); border-radius: 8px;
-      color: #FFF; line-height: 1.5; display: none;
-    }
-    .schedule p { margin: 0.5rem 0; }
-    .tip {
-      margin-top: 1rem; font-size: 0.875rem; color: var(--muted);
-      background: #F1F8E9; padding: 1rem; border-radius: 6px;
-    }
-    .filter-row {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
+    h1 {
+      margin-top: 0;
+      font-size: 1.75rem;
+      color: var(--primary);
     }
     .input-row {
       display: flex;
       gap: 0.5rem;
       margin-bottom: 0.5rem;
     }
-
     #plant-input {
       flex: 1;
+      padding: 0.75rem;
+      border: 1px solid var(--muted);
+      border-radius: 8px;
+      font-size: 1rem;
     }
-
     #clear-input {
       padding: 0.5rem 0.75rem;
       font-size: 0.9rem;
@@ -70,92 +90,191 @@
       border-radius: 6px;
       cursor: pointer;
     }
-
     #clear-input:hover {
       background-color: #37474F;
     }
+    .filter-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    select,
+    input[list] {
+      width: 100%;
+    }
+    
+    /* Schedule section with Opera-specific fixes */
+    .schedule {
+      margin-top: 1.5rem;
+      padding: 1.25rem;
+      background: var(--accent);
+      border-radius: 8px;
+      color: black !important; /* Force black text for maximum readability */
+      line-height: 1.5;
+      display: none;
+      /* Force hardware acceleration and override potential rendering issues */
+      -webkit-transform: translateZ(0);
+      -moz-transform: translateZ(0);
+      -ms-transform: translateZ(0);
+      transform: translateZ(0);
+      /* Fix for Opera's potential contrast adjustment */
+      -o-text-rendering: optimizeLegibility;
+      -o-font-smoothing: antialiased;
+    }
+    
+    /* Header section */
     .schedule-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 0.5rem;
     }
-
+    
+    /* Title with Opera-specific fixes */
     #plant-title {
       font-size: 1.25rem;
       font-weight: bold;
-      color: #1B5E20;
+      color: black !important; /* Force black text for Opera */
       margin: 0;
+      /* Ensure visibility */
+      background-color: transparent !important;
+      -o-transition: none;
+      text-shadow: 0px 0px 1px rgba(0,0,0,0.3); /* Add text shadow for better visibility */
     }
-
+    
+    /* Copy button */
     #copy-info {
       background: none;
       border: none;
       font-size: 1.2rem;
       cursor: pointer;
-      color: #1B5E20;
+      color: black !important; /* Force black for Opera */
     }
-
     #copy-info:hover {
       color: #003300;
     }
-
+    
+    /* Individual info lines with Opera-specific fixes */
     .info-line {
-      color: #1B5E20;
+      color: black !important; /* Force black text for Opera */
       margin: 0.5rem 0;
+      text-shadow: 0px 0px 1px rgba(0,0,0,0.3); /* Text shadow for better visibility */
+      background-color: transparent !important; /* Force transparent background */
+      display: block !important; /* Ensure display */
+      visibility: visible !important; /* Force visibility */
+      position: relative; /* For pseudo element */
     }
-
+    
+    /* Create a pseudo-element to highlight if needed */
+    .info-line::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255,255,255,0.1);
+      z-index: -1;
+      border-radius: 3px;
+    }
+    
+    /* Opera-specific fixes for all info elements */
+    #water-info, #mist-info, #repot-info, 
+    #temp-info, #soil-info, #tox-info {
+      color: black !important;
+      font-weight: 600 !important; /* Make text bolder */
+      -o-text-rendering: optimizeLegibility;
+      -o-font-smoothing: antialiased;
+    }
+    
+    /* Force visibility for Opera browser */
+    @media all {
+      .schedule p, .info-line, #plant-title {
+        color: black !important;
+        background-color: transparent !important;
+      }
+      
+      /* Override potential Opera dark mode issues */
+      @-o-keyframes fadeIn { 
+        from { opacity: 0.99; } 
+        to { opacity: 1; } 
+      }
+      
+      .schedule * {
+        -o-animation: fadeIn 0.01s linear;
+        animation: fadeIn 0.01s linear;
+      }
+    }
+    
+    /* Tips section */
+    .tip {
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      color: var(--muted);
+      background: #F1F8E9;
+      padding: 1rem;
+      border-radius: 6px;
+    }
+    
+    /* Download button */
     button#download-pdf {
-      margin-top: 1rem; width: 100%; padding: 0.75rem;
-      background: var(--primary); color: #FFF;
-      font-size: 1rem; border: none; border-radius: 8px;
+      margin-top: 1rem;
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--primary);
+      color: #FFF;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
     }
-    button#download-pdf:hover { background: #1B5E20; }
+    button#download-pdf:hover {
+      background: #1B5E20;
+    }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-  <!-- Import jsPDF as a module and attach to window -->
 </head>
 <body>
   <div class="container">
     <h1>Plant Watering Scheduler</h1>
+
+    <!-- Searchable input + clear -->
     <div class="input-row">
-      <input list="plant-list" id="plant-input" placeholder="Start typing..." autocomplete="off" />
+      <input list="plant-list" id="plant-input" placeholder="Start typing..." autocomplete="off">
       <button type="button" id="clear-input">Clean</button>
     </div>
 
+    <!-- Toxicity filter -->
     <div class="filter-row">
-      <input type="checkbox" id="toggle-nontoxic" />
+      <input type="checkbox" id="toggle-nontoxic">
       <label for="toggle-nontoxic">Only show non-toxic plants</label>
     </div>
 
     <datalist id="plant-list"></datalist>
 
-
+    <!-- Schedule display -->
     <div id="schedule" class="schedule">
-    <div class="schedule-header">
-      <h2 id="plant-title"></h2>
-      <button id="copy-info" title="Copy to clipboard">📋</button>
+      <div class="schedule-header">
+        <h2 id="plant-title"></h2>
+        <button id="copy-info" title="Copy to clipboard">📋</button>
+      </div>
+      <p id="water-info" class="info-line"></p>
+      <p id="mist-info" class="info-line"></p>
+      <p id="repot-info" class="info-line"></p>
+      <p id="temp-info" class="info-line"></p>
+      <p id="soil-info" class="info-line"></p>
+      <p id="tox-info" class="info-line"></p>
+      <button id="download-pdf">Download PDF</button>
+      <div class="tip">
+        <strong>Tip:</strong><br>
+        • <strong>Water:</strong> saturate soil until a little drains out the bottom—then wait the recommended days.<br>
+        • <strong>Mist:</strong> lightly spray the leaves to boost humidity; this doesn't replace watering.
+      </div>
     </div>
-    <p id="water-info" class="info-line"></p>
-    <p id="mist-info" class="info-line"></p>
-    <p id="repot-info" class="info-line"></p>
-    <p id="temp-info" class="info-line"></p>
-    <p id="soil-info" class="info-line"></p>
-    <p id="tox-info" class="info-line"></p>
-
-    <button id="download-pdf">Download PDF</button>
-
-    <div class="tip">
-      <strong>Tip:</strong><br>
-      • <strong>Water:</strong> saturate soil until a little drains out the bottom—then wait the recommended days.<br>
-      • <strong>Mist:</strong> lightly spray the leaves to boost humidity; this doesn't replace watering.
-    </div>
-</div>
-
   </div>
 
-  <!-- Your main JS as module -->
+  <!-- Main JS (imports plantData.js and jsPDF in module) -->
   <script type="module" src="main.js" defer></script>
 </body>
 </html>
