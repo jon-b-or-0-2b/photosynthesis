@@ -57,42 +57,12 @@
       text-align: left;
     }
 
-
-
-    select {
+    select, input[list] {
       width: 100%;
       padding: 0.75rem;
       border: 1px solid var(--muted);
       border-radius: 8px;
       font-size: 1rem;
-    }
-
-    .schedule {
-      margin-top: 1.5rem;
-      padding: 1.25rem;
-      background: var(--accent);
-      border-radius: 8px;
-      color: #FFF;
-      line-height: 1.5;
-      display: none;
-    }
-
-    .schedule p { margin: 0.5rem 0; }
-
-    .tip {
-      margin-top: 1rem;
-      font-size: 0.875rem;
-      color: var(--muted);
-      background: #F1F8E9;
-      padding: 1rem;
-      border-radius: 6px;
-    }
-
-    .filter-row {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
     }
 
     .input-row {
@@ -114,9 +84,77 @@
       border-radius: 6px;
       cursor: pointer;
     }
+    #clear-input:hover { background-color: #37474F; }
 
-    #clear-input:hover {
-      background-color: #37474F;
+    .plant-slider-wrapper {
+      position: relative;
+      margin: 1rem 0;
+      display: flex;
+      align-items: center;
+    }
+    .plant-slider {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 1rem;
+      padding: 0.5rem 1rem;
+      scrollbar-width: none;            /* Firefox */
+    }
+    .plant-slider::-webkit-scrollbar {  /* Chrome/Safari */
+      display: none;
+    }
+    .plant-card {
+      flex: 0 0 100px;
+      scroll-snap-align: start;
+      background: var(--card);
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      padding: 0.5rem;
+      cursor: pointer;
+    }
+    .plant-card img {
+      width: 100%;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+    }
+
+    .slider-btn {
+      background: rgba(0,0,0,0.05);
+      border: none;
+      font-size: 1.25rem;
+      width: 2rem; height: 2rem;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .slider-btn.prev { margin-right: 0.5rem; }
+    .slider-btn.next { margin-left: 0.5rem; }
+
+    .filter-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .schedule {
+      margin-top: 1.5rem;
+      padding: 1.25rem;
+      background: var(--accent);
+      border-radius: 8px;
+      color: #FFF;
+      line-height: 1.5;
+      display: none;
+    }
+    .schedule p { margin: 0.5rem 0; }
+
+    .tip {
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      color: var(--muted);
+      background: #F1F8E9;
+      padding: 1rem;
+      border-radius: 6px;
     }
 
     .schedule-header {
@@ -125,14 +163,12 @@
       align-items: center;
       margin-bottom: 0.5rem;
     }
-
     #plant-title {
       font-size: 1.25rem;
       font-weight: bold;
       color: #1B5E20;
       margin: 0;
     }
-
     #copy-info {
       background: none;
       border: none;
@@ -140,10 +176,7 @@
       cursor: pointer;
       color: #1B5E20;
     }
-
-    #copy-info:hover {
-      color: #003300;
-    }
+    #copy-info:hover { color: #003300; }
 
     button#download-pdf {
       margin-top: 1rem;
@@ -156,10 +189,7 @@
       border-radius: 8px;
       cursor: pointer;
     }
-
-    button#download-pdf:hover {
-      background: #1B5E20;
-    }
+    button#download-pdf:hover { background: #1B5E20; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head>
@@ -177,6 +207,35 @@
       <input list="plant-list" id="plant-input" placeholder="Start typing..." autocomplete="off" />
       <button type="button" id="clear-input">Clean</button>
     </div>
+
+    <!-- Slider -->
+    <div class="plant-slider-wrapper">
+      <button class="slider-btn prev" aria-label="Previous">&larr;</button>
+      <div class="plant-slider">
+        <div class="plant-card" data-plant="Snake Plant">
+          <img src="images/snake-plant.png" alt="Snake Plant">
+          <p>Snake Plant</p>
+        </div>
+        <div class="plant-card" data-plant="Peace Lily">
+          <img src="images/peace-lily.png" alt="Peace Lily">
+          <p>Peace Lily</p>
+        </div>
+        <div class="plant-card" data-plant="Spider Plant">
+          <img src="images/spider-plant.png" alt="Spider Plant">
+          <p>Spider Plant</p>
+        </div>
+        <div class="plant-card" data-plant="Aloe Vera">
+          <img src="images/aloe-vera.png" alt="Aloe Vera">
+          <p>Aloe Vera</p>
+        </div>
+        <div class="plant-card" data-plant="Pothos">
+          <img src="./images/pothos.png" alt="Pothos">
+          <p>Pothos</p>
+        </div>
+      </div>
+      <button class="slider-btn next" aria-label="Next">&rarr;</button>
+    </div>
+    <!-- End Slider -->
 
     <div class="filter-row">
       <input type="checkbox" id="toggle-nontoxic" />
@@ -205,13 +264,38 @@
         • <strong>Mist:</strong> lightly spray the leaves to boost humidity; this doesn't replace watering.
       </div>
     </div>
-  <footer style="text-align:center; margin-top: 2rem; font-size: 0.8rem;">
-  <a href="privacy.html" style="color: var(--muted); text-decoration: none;">Privacy Policy</a>
-  </footer>
+
+    <footer style="text-align:center; margin-top: 2rem; font-size: 0.8rem;">
+      <a href="privacy.html" style="color: var(--muted); text-decoration: none;">Privacy Policy</a>
+    </footer>
   </div>
 
   <script type="module" src="main.js" defer></script>
+  <script>
+    // Slider scrolling
+    document.addEventListener('DOMContentLoaded', () => {
+      const slider = document.querySelector('.plant-slider');
+      const btnNext = document.querySelector('.slider-btn.next');
+      const btnPrev = document.querySelector('.slider-btn.prev');
+      const card = document.querySelector('.plant-card');
+      const cardWidth = card.offsetWidth + parseInt(getComputedStyle(slider).gap);
 
+      btnNext.addEventListener('click', () =>
+        slider.scrollBy({ left: cardWidth, behavior: 'smooth' })
+      );
+      btnPrev.addEventListener('click', () =>
+        slider.scrollBy({ left: -cardWidth, behavior: 'smooth' })
+      );
 
+      document.querySelectorAll('.plant-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const name = card.dataset.plant;
+          document.getElementById('plant-input').value = name;
+          // call your schedule display function:
+          if (typeof showScheduleFor === 'function') showScheduleFor(name);
+        });
+      });
+    });
+  </script>
 </body>
 </html>

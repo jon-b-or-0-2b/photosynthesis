@@ -8,14 +8,6 @@ const plantData = {
     soilType: "Well-draining cactus/succulent mix",
     toxicity: "Toxic"
   },
-  "Peace Lily": {
-    wateringDays: 7,
-    mistingDays: 7,
-    repotMonths: 12,
-    temperature: "65-80°F",
-    soilType: "Rich, well-draining soil",
-    toxicity: "Toxic"
-  },
   "Spider Plant": {
     wateringDays: 7,
     mistingDays: 14,
@@ -301,7 +293,6 @@ const plantData = {
 "Peperomia": {wateringDays: 7, mistingDays: 14, repotMonths: 12, temperature: "60-75°F", soilType: "Well-draining potting mix", toxicity: "Non-toxic"},
 "Sansevieria Trifasciata (Snake Plant)": {wateringDays: 14, mistingDays: 30, repotMonths: 24, temperature: "60-85°F", soilType: "Well-draining cactus/succulent mix", toxicity: "Toxic"},
 "Schefflera (Umbrella Plant)": {wateringDays: 7, mistingDays: 7, repotMonths: 12, temperature: "60-75°F", soilType: "Well-draining potting soil", toxicity: "Toxic"},
-"Spathiphyllum (Peace Lily)": {wateringDays: 7, mistingDays: 7, repotMonths: 12, temperature: "65-80°F", soilType: "Rich, well-draining soil", toxicity: "Toxic"},
 "Syngonium Podophyllum (Arrowhead Plant)": {wateringDays: 7, mistingDays: 7, repotMonths: 12, temperature: "60-75°F", soilType: "Well-draining potting mix", toxicity: "Toxic"},
 "Tradescantia Zebrina (Wandering Jew)": {wateringDays: 5, mistingDays: 3, repotMonths: 12, temperature: "60-75°F", soilType: "Moist, well-draining soil", toxicity: "Toxic"},
 "Astrophytum Myriostigma (Bishop's Cap Cactus)": {wateringDays: 14, mistingDays: ": No Misting", repotMonths: 24, temperature: "60-80°F", soilType: "Cactus mix", toxicity: "Non-toxic"},
@@ -323,7 +314,7 @@ const plantData = {
 "Kentia Palm (Howea forsteriana)": { wateringDays: 10, mistingDays: 7, repotMonths: 24, temperature: "60-85°F", soilType: "Well-draining soil", toxicity: "Non-toxic" },
 "Maranta (Prayer Plant)": { wateringDays: 5, mistingDays: 3, repotMonths: 12, temperature: "65-75°F", soilType: "Moist, well-draining soil", toxicity: "Non-toxic" },
 "Parlor Palm (Chamaedorea elegans)": { wateringDays: 7, mistingDays: 14, repotMonths: 24, temperature: "65-80°F", soilType: "Well-draining potting mix", toxicity: "Non-toxic" },
-"Peace Lily (Spathiphyllum)": { wateringDays: 7, mistingDays: 7, repotMonths: 12, temperature: "65-80°F", soilType: "Rich, well-draining soil", toxicity: "Toxic" },
+"Peace Lily": { wateringDays: 7, mistingDays: 7, repotMonths: 12, temperature: "65-80°F", soilType: "Rich, well-draining soil", toxicity: "Toxic" },
 "Philodendron (Philodendron spp.)": { wateringDays: 10, mistingDays: 14, repotMonths: 18, temperature: "65-80°F", soilType: "Peat-based soil mix", toxicity: "Toxic" },
 "Pothos (Epipremnum aureum)": { wateringDays: 10, mistingDays: 30, repotMonths: 18, temperature: "60-85°F", soilType: "Well-draining soil", toxicity: "Toxic" },
 "ZZ Plant (Zamioculcas zamiifolia)": { wateringDays: 21, mistingDays: ": No Misting", repotMonths: 24, temperature: "65-75°F", soilType: "Well-draining soil", toxicity: "Toxic" },
